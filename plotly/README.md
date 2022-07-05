@@ -126,6 +126,163 @@ Output:
 
 ![plot_ly](./images/Rplot_IMG.jpg)
 
+## Markers
+
+### Alpha Blending
+
+```r
+subplot(
+  plot_ly(mpg, x = ~cty, y = ~hwy, name = "default"),
+  plot_ly(mpg, x = ~cty, y = ~hwy) %>% 
+    add_markers(alpha = 0.2, name = "alpha")
+)
+```
+
+Output :
+
+![plot_ly](./images/Rplot_alphabend.png)
+
+### Colors
+The `colorbar()` function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness.
+
+#### Variations on a numeric color mapping
+```r
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5)
+subplot(
+  add_markers(p, color = ~cyl, showlegend = FALSE) %>% 
+    colorbar(title = "Viridis"),
+  add_markers(p, color = ~factor(cyl))
+)
+```
+
+Output :
+
+![plot_ly](./images/Rplot_col.png)
+
+There are numerous ways to alter the default color scale via the colors argument. This argument excepts one of the following: (1) a color brewer palette name (see the row names of RColorBrewer::brewer.pal.info for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like colorRamp() or scales::colour_ramp(). 
+
+#### Three variations on a numeric color mapping.
+```r
+col1 <- c("#132B43", "#56B1F7")
+col2 <- viridisLite::inferno(10)
+col3 <- colorRamp(c("red", "white", "blue"))
+subplot(
+  add_markers(p, color = ~cyl, colors = col1) %>%
+    colorbar(title = "ggplot2 default"),
+  add_markers(p, color = ~cyl, colors = col2) %>% 
+    colorbar(title = "Inferno"),
+  add_markers(p, color = ~cyl, colors = col3) %>% 
+    colorbar(title = "colorRamp")
+) %>% hide_legend()
+```
+
+Output :
+
+![plot_ly](./images/Rplot_col1.png)
+
+#### Three variations on a discrete color mapping.
+```r
+col1 <- "Accent"
+col2 <- colorRamp(c("red", "blue"))
+col3 <- c(`4` = "red", `5` = "black", `6` = "blue", `8` = "green")
+subplot(
+  add_markers(p, color = ~factor(cyl), colors = col1),
+  add_markers(p, color = ~factor(cyl), colors = col2),
+  add_markers(p, color = ~factor(cyl), colors = col3)
+) %>% hide_legend()
+```
+
+Output :
+
+![plot_ly](./images/Rplot_col2.png)
+
+### Symbols
+The symbol argument can be used to map data values to the marker.symbol plotly.js attribute. It uses the same semantics that we’ve already seen for color:
+
+- A numeric mapping generates trace.
+- A discrete mapping generates multiple traces (one trace per category).
+- The plural, symbols, can be used to specify the visual range for the mapping.
+- Mappings are avoided entirely through I().
+
+#### Mapping symbol to a numeric variable (left panel) and a factor (right panel).
+
+```r
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3) 
+subplot(
+  add_markers(p, symbol = ~cyl, name = "A single trace"),
+  add_markers(p, symbol = ~factor(cyl), color = I("black"))
+)
+```
+
+Output :
+
+![plot_ly](./images/Rplot_sym1.png)
+
+#### Specifying the visual range of `symbols`.
+
+```r
+subplot(
+  add_markers(p, symbol = ~cyl, symbols = c(17, 18, 19)),
+  add_markers(
+    p, color = I("black"),
+    symbol = ~factor(cyl), 
+    symbols = c("triangle-up", "diamond", "circle")
+  )
+)
+```
+
+Output :
+
+![plot_ly](./images/Rplot_sym2.png)
+
+#### Setting a fixed symbol directly using `I()`
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy) %>%
+  add_markers(symbol = I(18), alpha = 0.5)
+```
+
+Output :
+
+![plot_ly](./images/Rplot_sym3.png)
+
+## Stroke and span
+The `stroke` argument follows the same semantics as `color` and `symbol` when it comes to variable mappings and specifying visual ranges. Using stroke and span to control the outline color as well as the width of that outline.
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5) %>%
+  add_markers(symbol = I(18), stroke = I("black"), span = I(1))
+```
+
+Output :
+
+![plot_ly](./images/Rplot_stroke.png)
+
+### Size
+The `size` argument controls the area of markers (unless otherwise specified via sizemode), and must be a numeric variable. The `sizes` argument controls the minimum and maximum size of circles, in pixels:
+
+```r
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3) 
+subplot(
+  add_markers(p, size = ~cyl, name = "default"),
+  add_markers(p, size = ~cyl, sizes = c(1, 500), name = "custom")
+)
+```
+
+Output :
+
+![plot_ly](./images/Rplot_size1.png)
+
+arguments `I()` can be used to specify the size directly. In the case of markers, `size` controls the `marker.size` plotly.js attribute.
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3, size = I(30))
+```
+
+Output :
+
+![plot_ly](./images/Rplot_size2.png)
+
 
 ## References:
 
