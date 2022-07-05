@@ -122,3 +122,41 @@ subplot(
   add_markers(p, color = ~factor(cyl), colors = col2),
   add_markers(p, color = ~factor(cyl), colors = col3)
 ) %>% hide_legend()
+
+
+# Symbols
+
+# Mapping symbol to a numeric variable (left panel) and a factor (right panel)
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3)
+subplot(
+  add_markers(p, symbol = ~cyl, name = "A single trace"),
+  add_markers(p, symbol = ~factor(cyl), color = I("black"))
+)
+
+# Specifying the visual range of symbols
+subplot(
+  add_markers(p, symbol = ~cyl, symbols = c(17, 18, 19)),
+  add_markers(
+    p, color = I("black"),
+    symbol = ~factor(cyl),
+    symbols = c("triangle-up", "diamond", "circle")
+  )
+)
+
+# Setting a fixed symbol directly using I()
+plot_ly(mpg, x = ~cty, y = ~hwy) %>%
+  add_markers(symbol = I(18), alpha = 0.5)
+
+# Stroke and span
+plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5) %>%
+add_markers(symbol = I(18), stroke = I("black"), span = I(1))
+
+# Size
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3)
+subplot(
+  add_markers(p, size = ~cyl, name = "default"),
+  add_markers(p, size = ~cyl, sizes = c(1, 500), name = "custom")
+)
+
+# marker.size
+plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3, size = I(30))
